@@ -1,10 +1,13 @@
-h1. GitHub Spotlight Project
+GitHub Spotlight Project
+========================
 
-h2. Spec
+Spec
+--------
 
 Connect the GitHub Spotlight to a microcontroller so it can be controlled by the GitHub continuous integration system.
 
-h2. Proposal
+Proposal
+------------
 
 I intend to use the "Black Widow Arduino":http://asynclabs.com/store?page=shop.product_details&flypage=flypage.tpl&product_id=23&category_id=11&keyword=wifi to control three relays to turn on and off each of the stoplight's lights. The Black Widow with comes with a built-in wifi antenna so I will be able to make it controllable via a web interface accessible via the local network.
 
@@ -16,7 +19,8 @@ The relays and arduino will fit inside the existing stoplight case.
 
 The only possible necessary modification will be to drill a hole for the power supply cord.
 
-h2. Budget
+Budget
+----------
 
 $75 Black Widow Arduino 
 $36 3x Sparkfun Relay Control w/ PCB ($12 ea.)
