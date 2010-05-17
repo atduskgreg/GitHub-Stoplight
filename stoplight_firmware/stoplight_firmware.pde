@@ -21,7 +21,7 @@ int connectedMode = 1;
 int mode = 0;
 
 int pingInterval = 10 * 1000;
-int lastPingTime = 0;
+unsigned long lastPingTime = 0;
 
 int currentLight = red;
 
@@ -43,16 +43,12 @@ void setup()
 
 void loop()
 {
-  //digitalWrite(currentLight, HIGH);
+  digitalWrite(currentLight, HIGH);
   
-  //if((millis() - lastPingTime) >= pingInterval){
+  if((millis() - lastPingTime) >= pingInterval){
     // time to ping
-    doCheck();
-    
-//  } else {
-//    // don't ping yet
-//  
-//  }
+    doCheck(); 
+  }
   
   
   
@@ -85,27 +81,31 @@ void doCheck(){
     }
 
     if (!client.connected()) {
+      lastPingTime = millis();
       // TODO: change this to 412
       if(response.contains("HTTP/1.1 412 ")){
         if(response.contains("building")){
           Serial.println("YELLOW - 412");
+          currentLight = yellow;
           digitalWrite(yellow, HIGH);
-          delay(1000);
-          digitalWrite(yellow, LOW);
+          digitalWrite(red, LOW);
+          digitalWrite(green, LOW);
         } 
         else {
           Serial.println("RED - 412");   
+          currentLight = red;
           digitalWrite(red, HIGH);
-          delay(1000);
-          digitalWrite(red, LOW);   
+          digitalWrite(yellow, LOW);
+          digitalWrite(green, LOW);   
         }
 
       } 
       else if(response.contains("HTTP/1.1 200")){
         Serial.println("GREEN - 200");  
+        currentLight = yellow;
         digitalWrite(green, HIGH);
-        delay(1000);
-        digitalWrite(green, LOW);  
+        digitalWrite(red, LOW);
+        digitalWrite(yellow, LOW);
       }
       Serial.println();
       Serial.println("disconnecting.");
