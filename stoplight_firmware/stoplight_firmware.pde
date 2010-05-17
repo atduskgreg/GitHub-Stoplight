@@ -10,17 +10,21 @@ byte mac[] = {
 byte ip[] = { 
   192,168,1,147 };
 byte server[] = {
-  128,122,157,177}; // itp.nyu.edu //{ 66,102,7,104 }; // Google
+  207,97,227,239}; // github.com
 
 #define maxResponseLength 1000
 
 String response = String(maxResponseLength);
 
-// 0 => not connected
-// 1 => connected
 int notConnectedMode = 0;
 int connectedMode = 1;
 int mode = 0;
+
+int pingInterval = 10 * 1000;
+int lastPingTime = 0;
+
+int currentLight = red;
+
 
 Client client(server, 80);
 
@@ -32,26 +36,43 @@ void setup()
   pinMode(green, OUTPUT);
 
   Ethernet.begin(mac, ip);
-  // Serial.begin(9600);
+  Serial.begin(9600);
 
   delay(1000);
 }
 
 void loop()
 {
-  if(mode == notConnectedMode){
+  //digitalWrite(currentLight, HIGH);
+  
+  //if((millis() - lastPingTime) >= pingInterval){
+    // time to ping
+    doCheck();
+    
+//  } else {
+//    // don't ping yet
+//  
+//  }
+  
+  
+  
+ 
+}
+
+void doCheck(){
+   if(mode == notConnectedMode){
     // try to connect
-     // Serial.println("connecting...");
+     Serial.println("connecting...");
     if (client.connect()) {
-      // Serial.println("connected");
-      client.println("GET /~gab305/github_test_fail.html HTTP/1.0");
+      Serial.println("connected");
+      client.println("GET /site/stoplight/ HTTP/1.0");
       client.println();
       mode = connectedMode;
     } 
     else {
-      // Serial.println("connection failed");
+      Serial.println("connection failed");
       delay(2000);
-      // Serial.println("trying again...");  
+      Serial.println("trying again...");  
     }
    
   } 
@@ -59,21 +80,21 @@ void loop()
   else { 
     if (client.available()) {
       char c = client.read();
-      // Serial.print(c);
+      Serial.print(c);
       response.append(c);
     }
 
     if (!client.connected()) {
       // TODO: change this to 412
-      if(response.contains("HTTP/1.1 404")){
+      if(response.contains("HTTP/1.1 412 ")){
         if(response.contains("building")){
-          // Serial.println("YELLOW - 412");
+          Serial.println("YELLOW - 412");
           digitalWrite(yellow, HIGH);
           delay(1000);
           digitalWrite(yellow, LOW);
         } 
         else {
-          // Serial.println("RED - 412");   
+          Serial.println("RED - 412");   
           digitalWrite(red, HIGH);
           delay(1000);
           digitalWrite(red, LOW);   
@@ -81,13 +102,13 @@ void loop()
 
       } 
       else if(response.contains("HTTP/1.1 200")){
-        // Serial.println("GREEN - 200");  
+        Serial.println("GREEN - 200");  
         digitalWrite(green, HIGH);
         delay(1000);
         digitalWrite(green, LOW);  
       }
-      // Serial.println();
-      // Serial.println("disconnecting.");
+      Serial.println();
+      Serial.println("disconnecting.");
       client.stop();
 
       response = "";
@@ -95,5 +116,5 @@ void loop()
       delay(5000);
     }
   }
-}
 
+}
