@@ -20,7 +20,7 @@ int notConnectedMode = 0;
 int connectedMode = 1;
 int mode = 0;
 
-int pingInterval = 10 * 1000;
+int pingInterval = 5 * 1000;
 unsigned long lastPingTime = 0;
 
 int currentLight = red;
@@ -108,7 +108,7 @@ void doCheck(){
         digitalWrite(yellow, LOW);
       }
       // Serial.println();
-      Serial.println("disconnecting.");
+      // Serial.println("disconnecting.");
       client.stop();
 
       response = "";
