@@ -36,7 +36,7 @@ void setup()
   pinMode(green, OUTPUT);
 
   Ethernet.begin(mac, ip);
-  Serial.begin(9600);
+  // Serial.begin(9600);
 
   delay(1000);
 }
@@ -58,17 +58,17 @@ void loop()
 void doCheck(){
    if(mode == notConnectedMode){
     // try to connect
-     Serial.println("connecting...");
+     // Serial.println("connecting...");
     if (client.connect()) {
-      Serial.println("connected");
+      // Serial.println("connected");
       client.println("GET /site/stoplight/ HTTP/1.0");
       client.println();
       mode = connectedMode;
     } 
     else {
-      Serial.println("connection failed");
+      // Serial.println("connection failed");
       delay(2000);
-      Serial.println("trying again...");  
+      // Serial.println("trying again...");  
     }
    
   } 
@@ -76,7 +76,7 @@ void doCheck(){
   else { 
     if (client.available()) {
       char c = client.read();
-      Serial.print(c);
+      // Serial.print(c);
       response.append(c);
     }
 
@@ -85,14 +85,14 @@ void doCheck(){
       // TODO: change this to 412
       if(response.contains("HTTP/1.1 412 ")){
         if(response.contains("building")){
-          Serial.println("YELLOW - 412");
+          // Serial.println("YELLOW - 412");
           currentLight = yellow;
           digitalWrite(yellow, HIGH);
           digitalWrite(red, LOW);
           digitalWrite(green, LOW);
         } 
         else {
-          Serial.println("RED - 412");   
+          // Serial.println("RED - 412");   
           currentLight = red;
           digitalWrite(red, HIGH);
           digitalWrite(yellow, LOW);
@@ -101,13 +101,13 @@ void doCheck(){
 
       } 
       else if(response.contains("HTTP/1.1 200")){
-        Serial.println("GREEN - 200");  
-        currentLight = yellow;
+        // Serial.println("GREEN - 200");  
+        currentLight = green;
         digitalWrite(green, HIGH);
         digitalWrite(red, LOW);
         digitalWrite(yellow, LOW);
       }
-      Serial.println();
+      // Serial.println();
       Serial.println("disconnecting.");
       client.stop();
 
