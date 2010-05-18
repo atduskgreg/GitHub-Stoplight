@@ -113,7 +113,7 @@ void doCheck(){
 
       response = "";
       mode = notConnectedMode;
-      delay(5000);
+      //delay(5000);
     }
   }
 
